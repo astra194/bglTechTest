@@ -1,0 +1,64 @@
+﻿@using bglTechTest.Web.Application.GitHubUserSearch
+@model GitHubUserSearchModel
+
+@{
+    ViewBag.Title = "GitHub User Search";
+}
+
+<h2>Search for a GitHub User</h2>
+
+<div>
+    @Html.ValidationSummary()
+</div>
+
+@if (Model != null)
+{
+
+    using (Html.BeginForm(MVC.GitHubUsers.Search(), FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.LabelFor(m => m.UserName, "User Name:");
+        @Html.TextBoxFor(m => m.UserName);
+        <button type="submit">Search</button>
+    }
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                {
+                    <image src="@Model.AvatarUrl"></image>
+                }
+            </div>
+            <div class="col-lg-4">
+                @if (!string.IsNullOrEmpty(Model.Name))
+                {
+                    <h2>@Model.Name</h2>
+                }
+                @if (!string.IsNullOrEmpty(Model.Location))
+                {
+                    <p>Location: @Model.Location</p>
+                }
+                @if (Model.Repositories?.Count > 0)
+                {
+                    <h4>Repositories</h4>
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Stargazers</th>
+                        </tr>
+                        @foreach (var r in Model.Repositories)
+                        {
+                            <tr>
+                                <td>@r.Name</td>
+                                <td>@r.StargazersCount</td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+
+        </div>
+    </div>
+
+}
